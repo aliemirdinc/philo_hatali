@@ -6,7 +6,7 @@
 /*   By: aldinc <aldinc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:36:19 by aldinc            #+#    #+#             */
-/*   Updated: 2025/02/06 19:08:36 by aldinc           ###   ########.fr       */
+/*   Updated: 2025/02/08 16:31:20 by aldinc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	*death_monitor(void *monitor)
 			{
 				philo[i].sim->simulation_over = 1;
 				pthread_mutex_lock(&philo->sim->log_mutex);
-				printf("%ld %d died\n", get_time_in_ms() - philo[i].sim->start_time, philo[i].id + 1);
+				printf("%ld %d died\n", get_time_in_ms() - philo[i].sim->start_time, philo[i].id);
 				pthread_mutex_unlock(&philo->sim->log_mutex);
 				return (NULL);
 			}

@@ -6,7 +6,7 @@
 /*   By: aldinc <aldinc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 18:02:21 by aldinc            #+#    #+#             */
-/*   Updated: 2025/02/07 11:38:26 by aldinc           ###   ########.fr       */
+/*   Updated: 2025/02/08 18:46:16 by aldinc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_one(t_philosopher *philo)
 
 static void	take_fork(int left, int right,t_philosopher *philo, t_simulation *sim)
 {
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 1)
 		{
 			pthread_mutex_lock(&sim->forks[left]);
 			pthread_mutex_lock(&sim->forks[right]);
@@ -42,7 +42,7 @@ static void	take_fork(int left, int right,t_philosopher *philo, t_simulation *si
 
 static void	leave_fork(int left, int right,t_philosopher *philo, t_simulation *sim)
 {
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 1)
 		{
 			pthread_mutex_unlock(&sim->forks[left]);
 			pthread_mutex_unlock(&sim->forks[right]);
@@ -58,7 +58,7 @@ void *philosopher_routine(void *arg)
 {
 	t_philosopher *philo = (t_philosopher *)arg;
 	t_simulation  *sim = philo->sim;
-	
+
 	if (check_one(philo) == 1)
 		return (NULL);
 
@@ -70,16 +70,16 @@ void *philosopher_routine(void *arg)
 		// Düşünme
 		ft_printf(philo, "is thinking");
 
-		// Deadlock riskini azaltmak için asimetrik kilitleme örneği
+		// Deadlock riskini azaltmak için asime trik kilitleme örneği
 		take_fork(left, right, philo, sim);
+		philo->last_meal = get_time_in_ms();
 
 		// Çatal alma log'u (iki çatal alındığı için iki mesaj)
 		ft_printf(philo, "has taken a fork");
 		ft_printf(philo, "has taken a fork");
 		ft_printf(philo, "is eating");
 
-		// Yemek yeme süresince, son yeme zamanını güncelle
-		philo->last_meal = get_time_in_ms();
+		// Yemek yeme süresince bekle
 		ft_usleep(sim->time_to_eat, sim);
 		philo->meals_eaten++;
 
@@ -98,7 +98,6 @@ void *philosopher_routine(void *arg)
 		// Uyuma
 		ft_printf(philo, "is sleeping");
 		ft_usleep(sim->time_to_sleep, sim);
-		
 	}
 	return (NULL);
 }
